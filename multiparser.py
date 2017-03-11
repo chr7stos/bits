@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 # Goal: Create a CLI using arparse
-# Function: Two subcommands, one prints contents of directory passed as argument and one adds the arguments and
-# outputs the results
 
 # Resources: this blog post: http://chase-seibert.github.io/blog/2014/03/21/python-multilevel-argparse.html
 
@@ -28,6 +26,7 @@ class CliPrint(object):
         # parse_args defaults to [1:] for args, but you need to
         # exclude the rest of the args too, or validation will fail
         args = parser.parse_args(sys.argv[1:2])
+        print args
         if not hasattr(self, args.command):
             print 'Unrecognized command'
             parser.print_help()
