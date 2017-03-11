@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 # Goal: Create a CLI using arparse
-# Function: Two subcommands with two optional arguments each. First subcommand takes 1 argument and prints it.
-# Second subcommand takes an argument that is a path and prints it
+# Function: Two subcommands, one prints contents of directory passed as argument and one adds the arguments and
+# outputs the results
+
+# Resources: this blog post: http://chase-seibert.github.io/blog/2014/03/21/python-multilevel-argparse.html
 
 import argparse
 import sys
@@ -50,7 +52,7 @@ class CliPrint(object):
     def add_list(self):
         parser = argparse.ArgumentParser(
             description='Download objects and refs from another repository')
-        # NOT prefixing the argument with -- means it's not optional
+        # If no -- prefixing is present, it means argument is required and is also positional
         parser.add_argument('-n', '--numbers', nargs='+', type=int)
         args = parser.parse_args(sys.argv[2:])
         added_nums = sum(args.numbers)
