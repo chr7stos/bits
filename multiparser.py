@@ -35,6 +35,7 @@ class CliPrint(object):
         # use dispatch pattern to invoke method with same name
         getattr(self, args.command)()
 
+
     def print_dir(self):
         """
         Usage: python multiparser.py print_dir --directory <name_of_dir>
