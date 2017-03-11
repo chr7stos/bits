@@ -8,6 +8,8 @@
 import argparse
 import sys
 import os
+from collections import namedtuple, Counter
+import Geohash
 
 
 class CliPrint(object):
@@ -15,11 +17,12 @@ class CliPrint(object):
     def __init__(self):
         parser = argparse.ArgumentParser(
             description='Print what you tell it to do',
-            usage='''python argparsing.py <command> [<args>]
+            usage='''python multiparser.py <command> [<args>]
 
         The commands of this function are
-        print_dir     Record changes to the repository
-        print_list      Download objects and refs from another repository
+        print_dir     Print contents of dir
+        print_list      Add elements in a list
+        geohash       Geohash x,y coordinates
         ''')
         parser.add_argument('command', help='Subcommand to run')
         # parse_args defaults to [1:] for args, but you need to
@@ -34,8 +37,8 @@ class CliPrint(object):
 
     def print_dir(self):
         """
-        Usage: python argparsing.py print_dir --directory <name_of_dir>
-        Usage: python argparsing.py print_dir -d <name_of_dir>
+        Usage: python multiparser.py print_dir --directory <name_of_dir>
+        Usage: python multiparser.py print_dir -d <name_of_dir>
         Will print out the contents of the directory passed as argument
         """
         parser = argparse.ArgumentParser(
@@ -51,13 +54,33 @@ class CliPrint(object):
 
     def add_list(self):
         parser = argparse.ArgumentParser(
-            description='Download objects and refs from another repository')
+            description='Sum elements of list')
         # If no -- prefixing is present, it means argument is required and is also positional
         parser.add_argument('-n', '--numbers', nargs='+', type=int)
         args = parser.parse_args(sys.argv[2:])
         added_nums = sum(args.numbers)
         print args
         print 'The sum of the numbers in this list {0} is: {1}' .format(args.numbers, added_nums)
+
+    def count_words(self):
+        parser = argparse.ArgumentParser(
+                description='Sum occurences of words')
+        # If no -- prefixing is present, it means argument is required and is also positional
+        parser.add_argument('-w', '--words', nargs='+')
+        args = parser.parse_args(sys.argv[2:])
+        counter = Counter()
+        for word in args.words:
+            counter[word] += 1
+        print counter
+
+    def geohash(self):
+        parser = argparse.ArgumentParser(
+            description='Create a named tuple with x,y coordinates from arguments given')
+
+        parser.add_argument('-c', '--coordinates', nargs=2, type=float)
+        args = parser.parse_args(sys.argv[2:])
+        geom = namedtuple("Geometry", ["x", "y", "geo"])
+        print geom(args.coordinates[0], args.coordinates[1], Geohash.encode(args.coordinates[0], args.coordinates[1]))
 
 
 if __name__ == '__main__':
